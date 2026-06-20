@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Shared Bookmarks",
+  "version": "1.0.0",
+  "description": "A collaborative bookmark space — add a page and everyone in your room sees it.",
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Shared Bookmarks"
+  },
+  "permissions": ["tabs", "storage", "bookmarks", "alarms"],
+  "host_permissions": ["https://firestore.googleapis.com/*"],
+  "background": { "service_worker": "background.js" }
+}
