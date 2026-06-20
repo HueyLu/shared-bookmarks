@@ -1,5 +1,3 @@
-# shared-bookmarks
-
 # Shared Bookmarks
 
 A Chrome extension that turns a normal bookmarks folder into a collaborative space. Pick a room code, share it with a group, and any page someone saves into their **📚 Shared Bookmarks** folder shows up for everyone else — automatically.
