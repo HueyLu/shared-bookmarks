@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    :root {
+      --ink: #14302e;
+      --accent: #0f766e;
+      --accent-soft: #cceae6;
+      --surface: #fbfaf7;
+      --card: #ffffff;
+      --line: #e7e3da;
+      --muted: #6b7770;
+      --danger: #b4413c;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      width: 360px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--ink);
+      background: var(--surface);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      background: var(--card);
+    }
+    header h1 { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; }
+    header h1 span { color: var(--accent); }
+
+    .room-pill {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border-radius: 999px;
+      padding: 3px 9px;
+      letter-spacing: 0.04em;
+    }
+
+    main { padding: 14px 16px; }
+
+    /* --- Setup view --- */
+    .field { margin-bottom: 10px; }
+    .field label {
+      display: block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 5px;
+    }
+    input[type="text"] {
+      width: 100%;
+      font-size: 14px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--card);
+      color: var(--ink);
+    }
+    input[type="text"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+    .hint { font-size: 11px; color: var(--muted); margin-top: 8px; line-height: 1.45; }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      border-radius: 8px;
+    }
+    .btn-primary {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 11px;
+      margin-top: 4px;
+      transition: filter 0.15s;
+    }
+    .btn-primary:hover { filter: brightness(1.08); }
+    .btn-primary:disabled { opacity: 0.55; cursor: default; filter: none; }
+
+    /* --- Main view --- */
+    .meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .meta-row b { color: var(--ink); }
+    .link {
+      background: none;
+      color: var(--muted);
+      font-size: 12px;
+      text-decoration: underline;
+      padding: 0;
+    }
+    .link:hover { color: var(--danger); }
+
+    .status { font-size: 11px; color: var(--muted); min-height: 14px; margin: 6px 0 10px; }
+    .status.error { color: var(--danger); }
+
+    ul#list { list-style: none; display: flex; flex-direction: column; gap: 8px; max-height: 320px; overflow-y: auto; }
+
+    .bm {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--bar, var(--accent));
+      border-radius: 8px;
+      padding: 9px 10px;
+    }
+    .bm img { width: 16px; height: 16px; flex: none; border-radius: 3px; }
+    .bm .body { flex: 1; min-width: 0; }
+    .bm a {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .bm a:hover { color: var(--accent); }
+    .bm .by { font-size: 11px; color: var(--muted); margin-top: 1px; }
+    .bm .del {
+      background: none;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1;
+      padding: 2px 4px;
+      flex: none;
+    }
+    .bm .del:hover { color: var(--danger); }
+
+    .empty { text-align: center; font-size: 12px; color: var(--muted); padding: 24px 8px; line-height: 1.5; }
+
+    .config-warn {
+      font-size: 12px;
+      color: var(--danger);
+      background: #fbeeed;
+      border: 1px solid #f1cfcc;
+      border-radius: 8px;
+      padding: 10px;
+      line-height: 1.45;
+    }
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📚 Shared <span>Bookmarks</span></h1>
+    <span id="roomPill" class="room-pill hidden"></span>
+  </header>
+
+  <main>
+    <!-- Shown when Firebase config is missing -->
+    <div id="configWarn" class="config-warn hidden">
+      Almost there — open <b>popup.js</b> and paste your Firebase
+      <b>project ID</b> and <b>API key</b> into the CONFIG block at the top.
+    </div>
+
+    <!-- Setup view -->
+    <section id="setup">
+      <div class="field">
+        <label for="nameInput">Your name</label>
+        <input type="text" id="nameInput" placeholder="e.g. Alex" maxlength="24" />
+      </div>
+      <div class="field">
+        <label for="roomInput">Room code</label>
+        <input type="text" id="roomInput" placeholder="e.g. study-group" maxlength="32" />
+      </div>
+      <button id="joinBtn" class="btn-primary">Join room</button>
+      <p class="hint">
+        Anyone who enters the same room code shares the same bookmarks.
+        Pick something hard to guess and share it with your group.
+      </p>
+    </section>
+
+    <!-- Main view -->
+    <section id="board" class="hidden">
+      <div class="meta-row">
+        <span>You're <b id="whoLabel"></b></span>
+        <button id="leaveBtn" class="link">Leave room</button>
+      </div>
+      <button id="addBtn" class="btn-primary">+ Add this page</button>
+      <p id="status" class="status"></p>
+      <ul id="list"></ul>
+    </section>
+  </main>
+
+  <script src="popup.js"></script>
+</body>
+</html>
