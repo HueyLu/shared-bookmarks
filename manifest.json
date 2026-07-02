@@ -5,7 +5,19 @@
   "description": "A collaborative bookmark space — add a page and everyone in your room sees it.",
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Shared Bookmarks"
+    "default_title": "Shared Bookmarks",
+    "default_icon": {
+      "16": "icon16.png",
+      "32": "icon32.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icon16.png",
+    "32": "icon32.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
   },
   "permissions": ["tabs", "storage", "bookmarks", "alarms"],
   "host_permissions": ["https://firestore.googleapis.com/*"],
